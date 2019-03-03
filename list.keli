@@ -1,0 +1,386 @@
+= module.import("./boolean.keli")
+= module.import("./box.keli")
+= module.import("./math.keli")
+= module.import("./string.keli")
+
+
+{A Type}
+(x A).toString = ffi.javascript("KELI_PRELUDE$show(k$x)").as(String)
+
+List.of(A Type) = tags.
+    case(nil)
+    case(cons.current(A) next(List.of(A)))
+
+{A Type}
+(this List.of(A)).toString
+    | String
+    = "[".++(this._toString).++("]")
+
+{A Type}
+(this List.of(A))._toString
+    | String
+    = this.
+        case(nil):
+            ("")
+        case(cons.current(c) next(n)):
+            (c.toString.++(",").++(n._toString))
+
+
+"""
+Get the first element of a list.
+```c
+//example
+[1,2,3].toList.head = Box.with.value(1)
+[].toList.head = Box.empty
+```
+"""
+{A Type}
+(this List.of(A)).head
+    | Box.of(A)
+    = this.
+        case(nil):
+            (Box.empty)
+        case(cons.current(c) next(n)):
+            (Box.with.value(c))
+
+"""
+Get the last element of a list.
+```c
+//example
+[1,2,3].toList.last = Box.with.value(3)
+[].toList.last = Box.empty
+```
+"""
+{A Type}
+(this List.of(A)).last
+    | Box.of(A)
+    = this.
+        case(nil):
+            (Box.empty)
+        case(cons.current(c) next(n)):
+            (n.
+                case(nil):
+                    (Box.with.value(c))
+                default:
+                    (n.last))
+
+"""
+Get all elements of this List, except the first element.
+```c
+//example
+[1,2,3].toList.tail = [2,3].toList
+[].toList.tail = [].toList
+```
+"""
+{A Type}
+(this List.of(A)).tail
+    | List.of(A)
+    = this.
+        case(nil):
+            (List.nil)
+        case(cons.current(c) next(n)):
+            (n)
+
+"""
+Get all the elements of this List, except the last element.
+```c
+//example
+[1,2,3].toList.init = [1,2].toList
+[].toList.init = [].toList
+```
+"""
+{A Type}
+(this List.of(A)).init
+    | List.of(A)
+    = this.reverse.tail.reverse
+
+"""
+Get the number of elements in this List.
+```c
+//example
+[1,2,3].toList.length = 3
+[].toList.length = 0
+```
+"""
+{A Type}
+(this List.of(A)).length 
+    | Int 
+    = this.
+        case(nil):
+            (0)
+        case(cons.next(n)):
+            (1.+(n.length))
+
+"""
+Check if this List is empty. 
+This should be used instead of using `myList.length.==(0)`, as this function is more efficient. 
+```c
+//example
+[].toList.isEmpty = Boolean.false
+[1,2].toList.isEmpty = Boolean.true
+```
+"""
+{A Type}
+(this List.of(A)).isEmpty
+    | Boolean
+    = this.
+        case(nil):
+            (Boolean.true)
+        case(cons.current(c) next(n)):
+            (Boolean.false)
+
+"""
+Add an element at the back of this List.
+```c
+//example
+[1,2,3].toList.append(4) = [1,2,3,4].toList
+```
+"""
+{A Type}
+(this List.of(A)).append(element A) 
+    | List.of(A)
+    = this.
+        case(nil):
+            (List.cons.current(element) next(List.nil))
+        case(cons.current(c) next(n)):
+            (List.cons.current(c) next(n.append(element)))
+
+
+"""
+Take all elements from this List that fulfils the given predicate.
+```c
+//example
+[1,2,3,4,5].toList.where(.>(2)) = [3,4,5].toList
+```
+"""
+{A Type}
+(this List.of(A)).where(f Function.in(A) out(Boolean))
+    | List.of(A)
+    = this.
+        case(nil):
+            (List.nil)
+        case(cons.current(c) next(n)):
+            (f.apply(c).
+                case(true):
+                    (List.cons.current(c) next(n.where(f)))
+                case(false):
+                    (n.where(f)))
+
+"""
+Transform all elements in this List with the given function.
+```c
+//example
+[1,2,3,4].toList.select(.*(2)) = [2,4,6,8].toList
+```
+"""
+{A Type} {B Type}
+(this List.of(A)).select(f Function.in(A) out(B))
+    | List.of(B)
+    = this.
+        case(nil):
+            (List.nil)
+        case(cons.current(c) next(n)):
+            (List.cons.current(f.apply(c)) next(n.select(f)))
+
+{A Type} {B Type}
+(this List.of(A)).
+    select(f Function.in(A) out(B))
+    where(g Function.in(A) out(Boolean))
+    | List.of(B)
+    = this.
+        case(nil):
+            (List.nil)
+        case(cons.current(c) next(n)):
+            (g.apply(c).
+                case(true):
+                    (List.cons.
+                        current(f.apply(c)) 
+                        next(n.select(f) where(g)))
+                case(false):
+                    (n.select(f) where(g)))
+
+"""
+To check if some element of this List fulfils the given predicate.
+```c
+//example
+[1,2,3].toList.some(.>(2))  = Boolean.true
+[1,2,3].toList.some(.>(10)) = Boolean.false
+```
+"""
+{A Type}
+(this List.of(A)).some(predicate Function.in(A) out(Boolean))
+    | Boolean
+    = this.
+        case(nil):
+            (Boolean.false)
+        case(cons.current(c) next(n)):
+            (predicate.apply(c).
+                case(true):
+                    (Boolean.true)
+                case(false):
+                    (n.some(predicate)))
+
+"""
+To check if every element of this List fulfils the given predicate.
+```c
+//example
+[1,2,3].toList.every(.>(0)) = Boolean.true
+[1,2,3].toList.every(.>(2)) = Boolean.false
+```
+"""
+{A Type}
+(this List.of(A)).every(predicate Function.in(A) out(Boolean))
+    | Boolean
+    = this.
+        case(nil):
+            (Boolean.true)
+        case(cons.current(c) next(n)):
+            (predicate.apply(c).
+                case(true):
+                    (n.every(predicate))
+                case(false):
+                    (Boolean.false))
+
+
+"""
+Concat two Lists together.
+```c
+//example
+[1,2,3].toList.concat([4,5,6].toList) = [1,2,3,4,5,6].toList
+```
+"""
+{A Type}
+(this List.of(A)).concat(that List.of(A))
+    | List.of(A)
+    = this.
+        case(nil):
+            (that)
+        case(cons.current(c) next(n)):
+            (List.cons.current(c) next(n.concat(that)))
+
+"""
+Reverse this List.
+```c
+//example
+[1,2,3].toList.reverse = [3,2,1]
+[].toList.reverse = []
+```
+"""
+{A Type}
+(this List.of(A)).reverse 
+    | List.of(A)
+    = this.
+        case(nil):
+            (List.nil)
+        case(cons.current(c) next(n)):
+            (n.reverse.concat(List.cons.current(c) next(List.nil)))
+
+
+"""
+Get a range of integers.
+"""
+(start Int).to(end Int) 
+    | List.of(Int)
+    = end.<(start).
+        case(true):
+            (end._forwardTo(start).reverse)
+        case(false):
+            (start._forwardTo(end))
+
+(start Int)._forwardTo(end Int)
+    | List.of(Int)
+    = end.<(start).
+        case(true):
+            (List.nil)
+        case(false):
+            (List.cons.current(start) next(start.+(1)._forwardTo(end)))
+
+
+"""
+Drop the specified number of elements from the front of this List.
+```c
+//example
+[1,2,3].toList.drop(2) == [3].toList
+```
+"""
+{A Type}
+(this List.of(A)).drop(x Int)
+    | List.of(A)
+    = x.<(1).
+        case(true):
+            (this)
+        case(false):
+            ((this.
+                case(nil):
+                    (List.nil)
+                case(cons.current(c) next(n)):
+                    (n.drop(x.-(1)))))
+
+"""
+Take the specified number of elements from the front of this List.
+
+```c
+//example
+[1,2,3,4,5].toList.take(3) = [1,2,3].toList
+```
+"""
+{A Type}
+(this List.of(A)).take(x Int)
+    | List.of(A)
+    = this.reverse.drop(this.length.-(x)).reverse
+
+"""
+Take elements from index `a` until inlcuding index `b` from a List.
+```
+//example
+[9,8,7,6,5].from(1) to(3) return [8,7,6]
+```
+"""
+{A Type}
+(this List.of(A)).from(a Int) to(b Int)
+    | List.of(A)
+    = this.drop(a).take(b.-(a).+(1))
+
+
+"Convert this Array to List."
+{A Type}
+(this Array.of(A)).toList 
+    = ffi.javascript("""
+    (() => {
+        const result = k$List.cons({current:k$this[0],next:k$List.nil});
+        let current = result;
+        for(let i=1;i<k$this.length;i++){
+            current.__carry.next = k$List.cons({current:k$this[i],next:k$List.nil});
+            current = current.__carry.next;
+        }
+        return result;
+    })()
+    """).as(List.of(A))
+
+
+"""
+Partition this List by a predicate.
+```c
+//example
+[1,2,3,4].toList.partitionBy(.>(2)) = object.included([3,4].toList) excluded([1,2].toList)
+```
+"""
+{A Type}
+(this List.of(A)).partitionBy(f Function.in(A) out(Boolean))
+    | object.included(List.of(A)) excluded(List.of(A))
+    = this._partitionBy(f) startingWith(object.included(List.nil) excluded(List.nil))
+
+{A Type}
+(this List.of(A)).
+    _partitionBy(f Function.in(A) out(Boolean))
+    startingWith(previousResult object.included(List.of(A)) excluded(List.of(A)))
+    | object.included(List.of(A)) excluded(List.of(A))
+    = this.
+        case(nil):
+            (previousResult)
+        case(cons.current(c) next(n)):
+            (f.apply(c).
+                case(true):
+                    (n._partitionBy(f) startingWith(previousResult.included(.append(c))))
+                case(false):
+                    (n._partitionBy(f) startingWith(previousResult.excluded(.append(c)))))

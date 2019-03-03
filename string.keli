@@ -1,0 +1,16 @@
+= module.import("./boolean.keli")
+
+(this String).==(that String) = ffi.javascript("k$this === k$that ? k$Boolean.true : k$Boolean.false").as(Boolean)
+
+"""
+For concatenating strings.
+```c
+//example
+"Hello".++(" world") = "Hello world"
+```
+"""
+(this String).++(that String) = ffi.javascript("k$this + k$that").as(String)
+
+
+(this String).replace(old String) with(new String) =
+    ffi.javascript("k$this.replace(new RegExp(k$old, 'g'), k$new)").as(String)

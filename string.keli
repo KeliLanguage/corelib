@@ -1,5 +1,7 @@
 = module.import("./boolean.keli")
 
+
+
 (this String).==(that String) = ffi.javascript("k$this === k$that ? k$Boolean.true : k$Boolean.false").as(Boolean)
 
 """
@@ -11,6 +13,29 @@ For concatenating strings.
 """
 (this String).++(that String) = ffi.javascript("k$this + k$that").as(String)
 
+"""
+Get the number of characters of in this String.
+```c
+//example
+"hello".length = 5
+```
+"""
+(this String).length =
+    ffi.javascript("k$this.length").as(Int)
 
+"""
+Replace every occurence of the `old` String with `new` String.
+```c
+//example
+"Hello world".replace("Hello") with("Bye") = "Bye world"
+```
+"""
 (this String).replace(old String) with(new String) =
     ffi.javascript("k$this.replace(new RegExp(k$old, 'g'), k$new)").as(String)
+
+
+(this String).toUpperCase =
+    ffi.javascript("k$this.toUpperCase()").as(String)
+
+(this String).toLowerCase =
+    ffi.javascript("k$this.toLowerCase()").as(String)

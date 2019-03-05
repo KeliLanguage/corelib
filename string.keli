@@ -2,7 +2,7 @@
 
 
 
-(this String).==(that String) = ffi.javascript("k$this === k$that ? k$Boolean.true : k$Boolean.false").as(Boolean)
+(this String).==(that String) = ffi.javascript("k$this === k$that ? k$Boolean.True : k$Boolean.False").as(Boolean)
 
 """
 For concatenating strings.

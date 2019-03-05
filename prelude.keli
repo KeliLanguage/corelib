@@ -1,0 +1,95 @@
+= [1,2,3].toList.toString
+
+
+
+
+
+= List.nil.append(1).append(2).append(3).tail
+
+
+
+= 99.to(87)
+
+= 0.to(10)
+
+= 10.to(10)
+
+= 0.to(10).some(.>(5))
+
+= 0.to(2).every(.<(1))
+
+= 0.to(10)
+
+
+
+= 0.to(10).drop(4)
+
+
+Dict.key(K Type) value(V Type) = tags.
+    case(nodes.
+        key(K)
+        value(V)
+        left(Dict.key(K) value(V))
+        right(Dict.key(K) value(V)))
+    case(leaf)
+
+// {K Type} {V Type} 
+// (this Dict.key(K) value(V)).lookup(key K)
+//     | Box.of(V)
+//     = this.
+//         case(nodes.key(k) value(v) left(l) right(r)):
+//             (key.==(k).
+//                 case(True):
+//                     (Box.Filled.value(v))
+//                 case(False):
+//                     (l.lookup(k)))
+//         case(leaf):
+//             (Box.Empty)
+
+// {K Type} {V Type}
+// (this Dict.key(K) value(V)).at(key K) put(value V)
+//     | Dict.key(K) value(V)
+//     = this.
+
+// = Dict.nil
+//     .at("ah ming") put("012345678")
+//     .at("john") put("0123456")
+//     .at("yo") put("hi")
+
+
+
+xs = List.nil.append(1).append(2).append(3).append(4)
+
+= xs.last
+
+result= xs.partitionBy(.>(2))
+
+= result.included
+= result.excluded
+
+(this Int).div(that Int)
+    | Result.ok(Int) fail(String)
+    = that.==(0).
+        case(True):
+            (Result.fail.with("Division by zero"))
+        case(False):
+            (Result.ok.value(this./(that)))
+
+= 123.div(2).then(.div(2))
+
+ComparisonResult = tags.
+    case(leftLessThanRight)
+    case(leftEqualsRight)
+    case(leftMoreThanRight)
+
+(this Int).compare(that Int) =
+    this.==(that).
+        case(True):
+            (ComparisonResult.leftEqualsRight)
+        case(False):
+            (this.>(that).
+                case(True):
+                    (ComparisonResult.leftMoreThanRight)
+                case(False):
+                    (ComparisonResult.leftLessThanRight))
+                    

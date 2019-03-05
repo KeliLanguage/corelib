@@ -19,19 +19,19 @@
 (x Int).^(y Int) =  ffi.javascript("Math.pow(k$x, k$y)").as(Int)
 
 "more than"
-(x Int).>(y Int)  = ffi.javascript("k$x > k$y   ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
+(x Int).>(y Int)  = ffi.javascript("k$x > k$y   ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
 
 "less than"
-(x Int).<(y Int)  = ffi.javascript("k$x < k$y   ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
+(x Int).<(y Int)  = ffi.javascript("k$x < k$y   ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
 
 "more than or equals to"
-(x Int).>=(y Int) = ffi.javascript("k$x >= k$y  ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
+(x Int).>=(y Int) = ffi.javascript("k$x >= k$y  ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
 
 "less than or equals to"
-(x Int).<=(y Int) = ffi.javascript("k$x <= k$y  ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
+(x Int).<=(y Int) = ffi.javascript("k$x <= k$y  ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
 
 "equals"
-(x Int).==(y Int) = ffi.javascript("k$x === k$y ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
+(x Int).==(y Int) = ffi.javascript("k$x === k$y ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
 
 "negate a number"
 (x Int).- = ffi.javascript("(-k$x)").as(Int)
@@ -42,11 +42,11 @@
 (x Float).*(y Float)  = ffi.javascript("k$x * k$y").as(Float)
 (x Float).^(y Float) =  ffi.javascript("Math.pow(k$x, k$y)").as(Float)
 (x Float).^(y Int) =  ffi.javascript("Math.pow(k$x, k$y)").as(Float)
-(x Float).>(y Float)  = ffi.javascript("k$x > k$y   ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
-(x Float).<(y Float)  = ffi.javascript("k$x < k$y   ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
-(x Float).>=(y Float) = ffi.javascript("k$x >= k$y  ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
-(x Float).<=(y Float) = ffi.javascript("k$x <= k$y  ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
-(x Float).==(y Float) = ffi.javascript("k$x === k$y ? k$boolean.k$Boolean.true : k$boolean.k$Boolean.false").as(Boolean)
+(x Float).>(y Float)  = ffi.javascript("k$x > k$y   ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
+(x Float).<(y Float)  = ffi.javascript("k$x < k$y   ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
+(x Float).>=(y Float) = ffi.javascript("k$x >= k$y  ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
+(x Float).<=(y Float) = ffi.javascript("k$x <= k$y  ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
+(x Float).==(y Float) = ffi.javascript("k$x === k$y ? k$boolean.k$Boolean.True : k$boolean.k$Boolean.False").as(Boolean)
 (x Float).sqrt = ffi.javascript("Math.sqrt(k$x)").as(Float)
 
 (x Int).toFloat = ffi.javascript("Math.trunc(k$x)").as(Float)

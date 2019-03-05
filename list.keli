@@ -4,12 +4,12 @@
 = module.import("./string.keli")
 
 
-{A Type}
-(x A).toString = ffi.javascript("KELI_PRELUDE$show(k$x)").as(String)
-
 List.of(A Type) = tags.
     case(nil)
     case(cons.current(A) next(List.of(A)))
+
+{A Type}
+(x A).toString = ffi.javascript("KELI_PRELUDE$show(k$x)").as(String)
 
 {A Type}
 (this List.of(A)).toString
@@ -350,8 +350,8 @@ Take elements from index `a` until inlcuding index `b` from a List.
         const result = k$List.cons({current:k$this[0],next:k$List.nil});
         let current = result;
         for(let i=1;i<k$this.length;i++){
-            current.__carry.next = k$List.cons({current:k$this[i],next:k$List.nil});
-            current = current.__carry.next;
+            current.next = k$List.cons({current:k$this[i],next:k$List.nil});
+            current = current.next;
         }
         return result;
     })()
@@ -384,3 +384,23 @@ Partition this List by a predicate.
                     (n._partitionBy(f) startingWith(previousResult.included(.append(c))))
                 case(false):
                     (n._partitionBy(f) startingWith(previousResult.excluded(.append(c)))))
+
+"""
+Return the leftmost element in this List that satisfies the given predicate.
+```c
+//example
+[1,2,3].toList.find(.>(1)) = Box.with.value(2)
+```
+"""
+{A Type}
+(this List.of(A)).find(p Function.in(A) out(Boolean))
+    | Box.of(A)
+    = this.
+        case(nil):
+            (Box.empty)
+        case(cons.current(c) next(n)):
+            (p.apply(c).
+                case(true):
+                    (Box.with.value(c))
+                case(false):
+                    (n.find(p)))

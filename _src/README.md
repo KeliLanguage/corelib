@@ -1,2 +1,2 @@
 # Keli Corelib
-To core library of the Keli language.
+The core library of the Keli language.

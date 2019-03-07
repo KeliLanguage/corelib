@@ -3,5 +3,7 @@
 
 # except
 !.gitignore
+!README.md
+!LICENSE
 !_src/
 !_test/

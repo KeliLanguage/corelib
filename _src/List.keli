@@ -1,8 +1,7 @@
-= module.import("./boolean.keli")
-= module.import("./box.keli")
-= module.import("./math.keli")
-= module.import("./string.keli")
-
+= module.import("./Boolean.keli")
+= module.import("./Box.keli")
+= module.import("./Math.keli")
+= module.import("./String.keli")
 
 List.of(A Type) = tags.
     case(Nil)

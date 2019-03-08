@@ -1,4 +1,4 @@
-= module.import("./boolean.keli")
+= module.import("./Boolean.keli")
 
 "minus"
 (x Int).-(y Int)  = ffi.javascript("k$x - k$y").as(Int)

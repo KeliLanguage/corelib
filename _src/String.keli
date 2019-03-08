@@ -1,4 +1,4 @@
-= module.import("./boolean.keli")
+= module.import("./Boolean.keli")
 
 
 

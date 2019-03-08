@@ -1,6 +1,9 @@
 # ignore all folders
 /*
 
+# ignore __temp__.keli
+__temp__.keli
+
 # except
 !.gitignore
 !README.md

@@ -4,8 +4,8 @@
 = module.import("./String.keli")
 
 List.of(A Type) = tags.
-    case(Nil)
-    case(Cons.current(A) next(List.of(A)))
+    case(.Nil)
+    case(.Cons($.value(A) next(List.of(A))))
 
 {A Type}
 (x A).toString = ffi.javascript("KELI_PRELUDE$show(k$x)").as(String)
@@ -19,10 +19,39 @@ List.of(A Type) = tags.
 (this List.of(A))._toString
     | String
     = this.
-        case(Nil):
+        case(.Nil):
             ("")
-        case(Cons.current(c) next(n)):
-            (c.toString.++(",").++(n._toString))
+
+        case(.Cons(c)):
+            (c.value.toString.++(",").++(c.next._toString))
+
+"""
+Get the n-th element of a list.
+```c
+//example
+[1,2,3].toList.at(0) = Box.With(1)
+```
+"""
+{A Type}
+(this List.of(A)).at(index Int) = 
+    this._at(index) currentIndex(0)
+
+
+{A Type}
+(this List.of(A))._at(index Int) currentIndex(ci Int)
+    | Box.of(A)
+    =
+    this.
+        case(.Nil):
+            (Box.Empty)
+    
+        case(.Cons(c)):
+            (ci.==(index).
+                case(.True):
+                    (Box.With(c.value))
+            
+                case(.False):
+                    (c.next._at(index) currentIndex(ci.+(1))))
 
 
 """
@@ -37,10 +66,10 @@ Get the first element of a list.
 (this List.of(A)).head
     | Box.of(A)
     = this.
-        case(Nil):
+        case(.Nil):
             (Box.Empty)
-        case(Cons.current(c) next(n)):
-            (Box.Filled.value(c))
+        case(.Cons(c)):
+            (Box.With(c.value))
 
 """
 Get the last element of a list.
@@ -54,14 +83,14 @@ Get the last element of a list.
 (this List.of(A)).last
     | Box.of(A)
     = this.
-        case(Nil):
+        case(.Nil):
             (Box.Empty)
-        case(Cons.current(c) next(n)):
-            (n.
-                case(Nil):
-                    (Box.Filled.value(c))
+        case(.Cons(c)):
+            (c.next.
+                case(.Nil):
+                    (Box.With(c.value))
                 default:
-                    (n.last))
+                    (c.next.last))
 
 """
 Get all elements of this List, except the first element.
@@ -75,10 +104,10 @@ Get all elements of this List, except the first element.
 (this List.of(A)).tail
     | List.of(A)
     = this.
-        case(Nil):
+        case(.Nil):
             (List.Nil)
-        case(Cons.current(c) next(n)):
-            (n)
+        case(.Cons(c)):
+            (c.next)
 
 """
 Get all the elements of this List, except the last element.
@@ -105,10 +134,11 @@ Get the number of elements in this List.
 (this List.of(A)).length 
     | Int 
     = this.
-        case(Nil):
+        case(.Nil):
             (0)
-        case(Cons.next(n)):
-            (1.+(n.length))
+
+        case(.Cons(c)):
+            (1.+(c.next.length))
 
 """
 Check if this List is Empty. 
@@ -123,9 +153,10 @@ This should be used instead of using `myList.length.==(0)`, as this function is 
 (this List.of(A)).isEmpty
     | Boolean
     = this.
-        case(Nil):
+        case(.Nil):
             (Boolean.True)
-        case(Cons.current(c) next(n)):
+
+        default:
             (Boolean.False)
 
 """
@@ -139,10 +170,11 @@ Add an element at the back of this List.
 (this List.of(A)).append(element A) 
     | List.of(A)
     = this.
-        case(Nil):
-            (List.Cons.current(element) next(List.Nil))
-        case(Cons.current(c) next(n)):
-            (List.Cons.current(c) next(n.append(element)))
+        case(.Nil):
+            (List.Cons($.value(element) next(List.Nil)))
+
+        case(.Cons(c)):
+            (List.Cons(c.next(.append(element))))
 
 
 """
@@ -156,14 +188,16 @@ Take all elements from this List that fulfils the given predicate.
 (this List.of(A)).where(f Function.in(A) out(Boolean))
     | List.of(A)
     = this.
-        case(Nil):
+        case(.Nil):
             (List.Nil)
-        case(Cons.current(c) next(n)):
-            (f.apply(c).
-                case(True):
-                    (List.Cons.current(c) next(n.where(f)))
-                case(False):
-                    (n.where(f)))
+
+        case(.Cons(c)):
+            (f.apply(c.value).
+                case(.True):
+                    (List.Cons(c.next(.where(f))))
+
+                case(.False):
+                    (c.next.where(f)))
 
 """
 Transform all elements in this List with the given function.
@@ -176,10 +210,10 @@ Transform all elements in this List with the given function.
 (this List.of(A)).select(f Function.in(A) out(B))
     | List.of(B)
     = this.
-        case(Nil):
+        case(.Nil):
             (List.Nil)
-        case(Cons.current(c) next(n)):
-            (List.Cons.current(f.apply(c)) next(n.select(f)))
+        case(.Cons(c)):
+            (List.Cons($.value(f.apply(c.value)) next(c.next.select(f))))
 
 {A Type} {B Type}
 (this List.of(A)).
@@ -187,16 +221,16 @@ Transform all elements in this List with the given function.
     where(g Function.in(A) out(Boolean))
     | List.of(B)
     = this.
-        case(Nil):
+        case(.Nil):
             (List.Nil)
-        case(Cons.current(c) next(n)):
+        case(.Cons(c)):
             (g.apply(c).
-                case(True):
-                    (List.Cons.
-                        current(f.apply(c)) 
-                        next(n.select(f) where(g)))
-                case(False):
-                    (n.select(f) where(g)))
+                case(.True):
+                    (List.Cons($.
+                        value(f.apply(c.value)) 
+                        next(c.next.select(f) where(g))))
+                case(.False):
+                    (c.next.select(f) where(g)))
 
 """
 To check if some element of this List fulfils the given predicate.
@@ -210,14 +244,16 @@ To check if some element of this List fulfils the given predicate.
 (this List.of(A)).some(predicate Function.in(A) out(Boolean))
     | Boolean
     = this.
-        case(Nil):
+        case(.Nil):
             (Boolean.False)
-        case(Cons.current(c) next(n)):
+
+        case(.Cons(c)):
             (predicate.apply(c).
-                case(True):
+                case(.True):
                     (Boolean.True)
-                case(False):
-                    (n.some(predicate)))
+
+                case(.False):
+                    (c.next.some(predicate)))
 
 """
 To check if every element of this List fulfils the given predicate.
@@ -231,13 +267,15 @@ To check if every element of this List fulfils the given predicate.
 (this List.of(A)).every(predicate Function.in(A) out(Boolean))
     | Boolean
     = this.
-        case(Nil):
+        case(.Nil):
             (Boolean.True)
-        case(Cons.current(c) next(n)):
+
+        case(.Cons(c)):
             (predicate.apply(c).
-                case(True):
-                    (n.every(predicate))
-                case(False):
+                case(.True):
+                    (c.next.every(predicate))
+
+                case(.False):
                     (Boolean.False))
 
 
@@ -252,10 +290,11 @@ Concat two Lists together.
 (this List.of(A)).concat(that List.of(A))
     | List.of(A)
     = this.
-        case(Nil):
+        case(.Nil):
             (that)
-        case(Cons.current(c) next(n)):
-            (List.Cons.current(c) next(n.concat(that)))
+
+        case(.Cons(c)):
+            (List.Cons(c.next(.concat(that))))
 
 """
 Reverse this List.
@@ -269,10 +308,10 @@ Reverse this List.
 (this List.of(A)).reverse 
     | List.of(A)
     = this.
-        case(Nil):
+        case(.Nil):
             (List.Nil)
-        case(Cons.current(c) next(n)):
-            (n.reverse.concat(List.Cons.current(c) next(List.Nil)))
+        case(.Cons(c)):
+            (c.next.reverse.concat(List.Cons($.value(c.value) next(List.Nil))))
 
 
 """
@@ -281,18 +320,19 @@ Get a range of integers.
 (start Int).to(end Int) 
     | List.of(Int)
     = end.<(start).
-        case(True):
+        case(.True):
             (end._forwardTo(start).reverse)
-        case(False):
+        case(.False):
             (start._forwardTo(end))
 
 (start Int)._forwardTo(end Int)
     | List.of(Int)
     = end.<(start).
-        case(True):
+        case(.True):
             (List.Nil)
-        case(False):
-            (List.Cons.current(start) next(start.+(1)._forwardTo(end)))
+
+        case(.False):
+            (List.Cons($.value(start) next(start.+(1)._forwardTo(end))))
 
 
 """
@@ -306,14 +346,17 @@ Drop the specified number of elements from the front of this List.
 (this List.of(A)).drop(x Int)
     | List.of(A)
     = x.<(1).
-        case(True):
+        case(.True):
             (this)
-        case(False):
-            ((this.
-                case(Nil):
+
+        case(.False):
+            (this.
+                case(.Nil):
                     (List.Nil)
-                case(Cons.current(c) next(n)):
-                    (n.drop(x.-(1)))))
+
+                case(.Cons(c)):
+                    (c.next.drop(x.-(1))))
+
 
 """
 Take the specified number of elements from the front of this List.
@@ -346,16 +389,35 @@ Take elements from index `a` until inlcuding index `b` from a List.
 (this Array.of(A)).toList 
     = ffi.javascript("""
     (() => {
-        const result = k$List.Cons({current:k$this[0],next:k$List.Nil});
-        let current = result;
+        const result = k$List.Cons({value:k$this[0],next:k$List.Nil});
+        let value = result;
         for(let i=1;i<k$this.length;i++){
-            current.next = k$List.Cons({current:k$this[i],next:k$List.Nil});
-            current = current.next;
+            value.__carry.next = k$List.Cons({value:k$this[i],next:k$List.Nil});
+            value = value.__carry.next;
         }
         return result;
     })()
     """).as(List.of(A))
 
+"""
+Return the leftmost element in this List that satisfies the given predicate.
+```c
+//example
+[1,2,3].toList.find(.>(1)) = Box.With(2)
+```
+"""
+{A Type}
+(this List.of(A)).find(p Function.in(A) out(Boolean))
+    | Box.of(A)
+    = this.
+        case(.Nil):
+            (Box.Empty)
+        case(.Cons(c)):
+            (p.apply(c).
+                case(.True):
+                    (Box.With(c.value))
+                case(.False):
+                    (c.next.find(p)))
 
 """
 Partition this List by a predicate.
@@ -366,40 +428,20 @@ Partition this List by a predicate.
 """
 {A Type}
 (this List.of(A)).partitionBy(f Function.in(A) out(Boolean))
-    | object.included(List.of(A)) excluded(List.of(A))
-    = this._partitionBy(f) startingFilled(object.included(List.Nil) excluded(List.Nil))
+    | $.included(List.of(A)) excluded(List.of(A))
+    = this._partitionBy(f) startingFilled($.included(List.Nil) excluded(List.Nil))
 
 {A Type}
 (this List.of(A)).
     _partitionBy(f Function.in(A) out(Boolean))
-    startingFilled(previousResult object.included(List.of(A)) excluded(List.of(A)))
-    | object.included(List.of(A)) excluded(List.of(A))
+    startingFilled(previousResult $.included(List.of(A)) excluded(List.of(A)))
+    | $.included(List.of(A)) excluded(List.of(A))
     = this.
-        case(Nil):
+        case(.Nil):
             (previousResult)
-        case(Cons.current(c) next(n)):
-            (f.apply(c).
-                case(True):
-                    (n._partitionBy(f) startingFilled(previousResult.included(.append(c))))
-                case(False):
-                    (n._partitionBy(f) startingFilled(previousResult.excluded(.append(c)))))
-
-"""
-Return the leftmost element in this List that satisfies the given predicate.
-```c
-//example
-[1,2,3].toList.find(.>(1)) = Box.Filled.value(2)
-```
-"""
-{A Type}
-(this List.of(A)).find(p Function.in(A) out(Boolean))
-    | Box.of(A)
-    = this.
-        case(Nil):
-            (Box.Empty)
-        case(Cons.current(c) next(n)):
-            (p.apply(c).
-                case(True):
-                    (Box.Filled.value(c))
-                case(False):
-                    (n.find(p)))
+        case(.Cons(c)):
+            (f.apply(c.value).
+                case(.True):
+                    (c.next._partitionBy(f) startingFilled(previousResult.included(.append(c))))
+                case(.False):
+                    (c.next._partitionBy(f) startingFilled(previousResult.excluded(.append(c)))))

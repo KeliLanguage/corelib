@@ -1,24 +1,28 @@
 Boolean = tags.
-    case(True) 
-    case(False) 
+    case(.True) 
+    case(.False) 
 
 (this Boolean).or(that Boolean) = 
     this.
-        case(True):
-            (Boolean.True)
-        case(False):
-            (that)
+        case(.True):
+           (Boolean.True)
+   
+       case(.False):
+           (that)
+
 
 (this Boolean).and(that Boolean) = 
     this.
-        case(True):
+        case(.True): 
             (that)
-        case(False):
+
+        case(.False): 
             (Boolean.False)
 
 (this Boolean).not = 
     this.
-        case(True):
+        case(.True): 
             (Boolean.False)
-        case(False):
+
+        case(.False): 
             (Boolean.True)

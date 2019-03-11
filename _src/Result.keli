@@ -1,12 +1,13 @@
 Result.ok(A Type) fail(B Type) = tags.
-    case(ok.value(A))
-    case(fail.with(B))
+    case(.Ok(A))
+    case(.Fail(B))
 
 {A Type} {B Type} {C Type}
-(this Result.ok(A) fail(B)).then(f Function.in(A) out(C))
+(this Result.ok(A) fail(B)).then(function Function.in(A) out(C))
     | Result.ok(C) fail(B)
     = this.
-        case(ok.value(v)):
-            (Result.ok.value(f.apply(v)))
-        case(fail.with(error)):
-            (Result.fail.with(error))
+        case(.Ok(o)):
+            (Result.Ok(function.apply(o)))
+    
+        case(.Fail(f)):
+            (Result.Fail(f))

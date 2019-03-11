@@ -36,6 +36,46 @@
 "negate a number"
 (x Int).- = ffi.javascript("(-k$x)").as(Int)
 
+(a Int).<(b Int)<=(c Int) =
+    a.<(b).and(b.<=(c))
+
+(a Int).<=(b Int)<(c Int) =
+    a.<=(b).and(b.<(c))
+
+(a Int).<(b Int)<(c Int) =
+    a.<(b).and(b.<(c))
+
+(a Float).<=(b Float)<=(c Float) = 
+    a.<=(b).and(b.<=(c))
+
+(a Float).<(b Float)<=(c Float) =
+    a.<(b).and(b.<=(c))
+
+(a Float).<=(b Float)<(c Float) =
+    a.<=(b).and(b.<(c))
+
+(a Float).<(b Float)<(c Float) =
+    a.<(b).and(b.<(c))
+
+CompareResult = tags.
+    case(.Ok(Int))
+    case(.Failed)
+
+(a CompareResult).<(b Int) = a.
+    case(.Ok(o)): 
+        (o.<(b).
+            case(.True): 
+                (CompareResult.Ok(b))
+
+            case(.False): 
+                (CompareResult.Failed))
+
+    case(.Failed): 
+        (CompareResult.Failed)
+
+(a Int).lift = CompareResult.Ok(a)
+
+    
 
 (x Float).-(y Float)  = ffi.javascript("k$x - k$y").as(Float)
 (x Float).+(y Float)  = ffi.javascript("k$x + k$y").as(Float)

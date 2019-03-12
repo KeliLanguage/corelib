@@ -1,0 +1,11 @@
+= module.import("./Boolean.keli")
+= module.import("./String.keli")
+
+{A Type}
+(expected A).shouldBe(actual A) =
+    expected.equals(actual).
+        case(.True):
+            ("OK")
+    
+        case(.False):
+            ("FAILED: expected ".++(expected.toString).++(" but got ").++(actual.toString))

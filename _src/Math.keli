@@ -1,6 +1,55 @@
 = module.import("./Boolean.keli")
 
 "minus"
+(x Float).-(y Float)  = ffi.javascript("k$x - k$y").as(Float)
+
+"plus"
+(x Float).+(y Float)  = ffi.javascript("k$x + k$y").as(Float)
+
+"multiply"
+(x Float).*(y Float)  = ffi.javascript("k$x * k$y").as(Float)
+
+"divide"
+(x Float)./(y Float)  = ffi.javascript("k$x / k$y").as(Float)
+
+"modulus"
+(x Float).%(y Float) = ffi.javascript("k$x % k$y").as(Float)
+
+"power"
+(x Float).^(y Float) =  ffi.javascript("Math.pow(k$x, k$y)").as(Float)
+
+"more than"
+(x Float).>(y Float)  = ffi.javascript("k$x > k$y   ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
+
+"less than"
+(x Float).<(y Float)  = ffi.javascript("k$x < k$y   ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
+
+"more than or equals to"
+(x Float).>=(y Float) = ffi.javascript("k$x >= k$y  ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
+
+"less than or equals to"
+(x Float).<=(y Float) = ffi.javascript("k$x <= k$y  ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
+
+"negate a number"
+(x Float).negative = ffi.javascript("(-k$x)").as(Float)
+
+"interval comparison"
+(a Float).<(b Float)<=(c Float) =
+    a.<(b).and(b.<=(c))
+
+"interval comparison"
+(a Float).<=(b Float)<(c Float) =
+    a.<=(b).and(b.<(c))
+
+"interval comparison"
+(a Float).<(b Float)<(c Float) =
+    a.<(b).and(b.<(c))
+
+"interval comparison"
+(a Float).<=(b Float)<=(c Float) =
+    a.<=(b).and(b.<=(c))
+
+"minus"
 (x Int).-(y Int)  = ffi.javascript("k$x - k$y").as(Int)
 
 "plus"
@@ -13,7 +62,7 @@
 (x Int)./(y Int)  = ffi.javascript("Math.trunc(k$x / k$y)").as(Int)
 
 "modulus"
-(x Int).mod(y Int) = ffi.javascript("k$x % k$y").as(Int)
+(x Int).%(y Int) = ffi.javascript("k$x % k$y").as(Int)
 
 "power"
 (x Int).^(y Int) =  ffi.javascript("Math.pow(k$x, k$y)").as(Int)
@@ -30,64 +79,32 @@
 "less than or equals to"
 (x Int).<=(y Int) = ffi.javascript("k$x <= k$y  ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
 
-"equals"
-(x Int).==(y Int) = ffi.javascript("k$x === k$y ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
-
 "negate a number"
-(x Int).- = ffi.javascript("(-k$x)").as(Int)
+(x Int).negative = ffi.javascript("(-k$x)").as(Int)
 
+"interval comparison"
 (a Int).<(b Int)<=(c Int) =
     a.<(b).and(b.<=(c))
 
+"interval comparison"
 (a Int).<=(b Int)<(c Int) =
     a.<=(b).and(b.<(c))
 
+"interval comparison"
 (a Int).<(b Int)<(c Int) =
     a.<(b).and(b.<(c))
 
-(a Float).<=(b Float)<=(c Float) = 
+"interval comparison"
+(a Int).<=(b Int)<=(c Int) =
     a.<=(b).and(b.<=(c))
 
-(a Float).<(b Float)<=(c Float) =
-    a.<(b).and(b.<=(c))
 
-(a Float).<=(b Float)<(c Float) =
-    a.<=(b).and(b.<(c))
+"""
+Convert Int to Float.
+"""
+(x Int).toFloat = ffi.javascript("k$x").as(Float)
 
-(a Float).<(b Float)<(c Float) =
-    a.<(b).and(b.<(c))
-
-CompareResult = tags.
-    case(.Ok(Int))
-    case(.Failed)
-
-(a CompareResult).<(b Int) = a.
-    case(.Ok(o)): 
-        (o.<(b).
-            case(.True): 
-                (CompareResult.Ok(b))
-
-            case(.False): 
-                (CompareResult.Failed))
-
-    case(.Failed): 
-        (CompareResult.Failed)
-
-(a Int).lift = CompareResult.Ok(a)
-
-    
-
-(x Float).-(y Float)  = ffi.javascript("k$x - k$y").as(Float)
-(x Float).+(y Float)  = ffi.javascript("k$x + k$y").as(Float)
-(x Float).*(y Float)  = ffi.javascript("k$x * k$y").as(Float)
-(x Float).^(y Float) =  ffi.javascript("Math.pow(k$x, k$y)").as(Float)
-(x Float).^(y Int) =  ffi.javascript("Math.pow(k$x, k$y)").as(Float)
-(x Float).>(y Float)  = ffi.javascript("k$x > k$y   ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
-(x Float).<(y Float)  = ffi.javascript("k$x < k$y   ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
-(x Float).>=(y Float) = ffi.javascript("k$x >= k$y  ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
-(x Float).<=(y Float) = ffi.javascript("k$x <= k$y  ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
-(x Float).==(y Float) = ffi.javascript("k$x === k$y ? k$Boolean.k$Boolean.True : k$Boolean.k$Boolean.False").as(Boolean)
-(x Float).sqrt = ffi.javascript("Math.sqrt(k$x)").as(Float)
-
-(x Int).toFloat = ffi.javascript("Math.trunc(k$x)").as(Float)
-(x Float).toInt = ffi.javascript("k$x").as(Int)
+"""
+Convert Float to Int.
+"""
+(x Float).toInt = ffi.javascript("Math.trunc(k$x)").as(Int)

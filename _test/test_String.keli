@@ -1,0 +1,10 @@
+= module.import("../_src/Assertion.keli")
+= module.import("../_src/String.keli")
+
+= "Hello".length.shouldBe(5)
+
+= "Hello a b c d a".replace("a") with("z").shouldBe("Hello z b c d z")
+
+= "HELLO".toLowerCase.shouldBe("hello")
+
+= "hello".toUpperCase.shouldBe("HELLO")

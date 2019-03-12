@@ -1,0 +1,16 @@
+= module.import("./Boolean.keli")
+= module.import("./Math.keli")
+= module.import("./String.keli")
+= module.import("./List.keli")
+
+
+
+Food = $.name(String) price(Float) type(String)
+
+foods =[Food.name("banana") price(2.0) type("fruit"),
+Food.name("kiwi") price(1.0) type("fruit"),
+Food.name("roti canai") price(1.0) type("india food")].toList
+
+= foods.select(.name) where(.type.equals("fruit"))
+
+= [1,2,3].toList.select(.+(0)) where(.>(1))

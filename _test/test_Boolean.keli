@@ -1,0 +1,26 @@
+= module.import("../_src/Boolean.keli")
+= module.import("../_src/Assertion.keli")
+
+// Testing equals
+= 1.equals(1).shouldBe(true)
+= 1.equals(0).shouldBe(false)
+= "Hello world".equals("Hello world").shouldBe(true)
+
+
+// Testing OR
+= true.or(true).shouldBe(true)
+= true.or(false).shouldBe(true)
+= false.or(true).shouldBe(true)
+= false.or(false).shouldBe(false)
+
+// Testing AND 
+= true.and(true).shouldBe(true)
+= false.and(true).shouldBe(false)
+= true.and(false).shouldBe(false) 
+= false.and(false).shouldBe(false)
+
+// Testing NOT
+= true.not.shouldBe(false)
+= false.not.shouldBe(true)
+
+

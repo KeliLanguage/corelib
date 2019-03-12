@@ -1,0 +1,102 @@
+= module.import("../_src/Assertion.keli")
+= module.import("../_src/Boolean.keli")
+= module.import("../_src/Math.keli")
+= module.import("../_src/List.keli")
+= module.import("../_src/Box.keli")
+
+= [1,2,3].toList.
+    case(.Nil):
+        (0)
+
+    case(.Cons(c)):
+        (2)
+
+xs = [1,2,3].toList
+emptyList = List.Nil
+
+// at
+= xs.at(0).shouldBe(Box.With(1))
+= xs.at(10).shouldBe(Box.Empty)
+
+// head
+= xs.head.shouldBe(Box.With(1))
+= emptyList.head.shouldBe(Box.Empty)
+
+// last
+= xs.last.shouldBe(Box.With(3))
+= emptyList.last.shouldBe(Box.Empty)
+
+// tail
+= xs.tail.shouldBe([2,3].toList)
+= emptyList.tail.shouldBe(emptyList)
+
+// init
+= xs.init.shouldBe([1,2].toList)
+= emptyList.init.shouldBe(emptyList)
+
+// length
+= xs.length.shouldBe(3)
+= emptyList.length.shouldBe(0)
+
+// isEmpty
+= xs.isEmpty.shouldBe(false)
+= emptyList.isEmpty.shouldBe(true)
+
+// append
+= xs.append(4).shouldBe([1,2,3,4].toList)
+= emptyList.append(1).shouldBe([1].toList)
+
+// prepend
+= xs.prepend(0).shouldBe([0,1,2,3].toList)
+= emptyList.prepend(0).shouldBe([0].toList)
+
+// where
+= xs.where(.equals(2)).shouldBe([2].toList)
+= emptyList.where(.equals(2)).shouldBe(emptyList)
+
+// select
+= xs.select(.*(2)).shouldBe([2,4,6].toList)
+= emptyList.select(.*(2)).shouldBe(emptyList)
+
+// select where
+= xs.select(.*(2)) where(.>(2)).shouldBe([6].toList)
+
+// some
+= xs.some(.<(1)).shouldBe(false)
+= xs.some(.>(1)).shouldBe(true)
+
+// every
+= xs.every(.>(0)).shouldBe(true)
+= xs.every(.>(1)).shouldBe(false)
+
+// concat
+= xs.concat(xs).shouldBe([1,2,3,1,2,3].toList)
+= emptyList.concat(xs).shouldBe(xs)
+
+// reverse
+= [1,2,3].toList.reverse.shouldBe([3,2,1].toList)
+
+// to
+= 0.to(10).shouldBe([0,1,2,3,4,5,6,7,8,9,10].toList)
+= 5.to(1).shouldBe([5,4,3,2,1].toList)
+
+// drop
+= xs.drop(2).shouldBe([3].toList)
+= emptyList.drop(1).shouldBe(emptyList)
+
+// take 
+= xs.take(2).shouldBe([1,2].toList)
+
+// from to
+= 0.to(5).from(1)to(4).shouldBe([1,2,3,4].toList)
+
+// find
+= xs.find(.equals(2)).shouldBe(Box.With(2))
+= emptyList.find(.equals(2)).shouldBe(Box.Empty)
+
+// partition 
+= xs.partitionBy(.>(1)).shouldBe($.included([2,3].toList) excluded([1].toList))
+
+
+
+

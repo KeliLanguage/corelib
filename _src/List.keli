@@ -3,12 +3,10 @@
 = module.import("./Math.keli")
 = module.import("./String.keli")
 
+
 List.of(A Type) = tags.
     case(.Nil)
     case(.Cons($.value(A) next(List.of(A))))
-
-{A Type}
-(x A).toString = ffi.javascript("KELI_PRELUDE$show(k$x)").as(String)
 
 {A Type}
 (this List.of(A)).toString
@@ -46,7 +44,7 @@ Get the n-th element of a list.
             (Box.Empty)
     
         case(.Cons(c)):
-            (ci.==(index).
+            (ci.equals(index).
                 case(.True):
                     (Box.With(c.value))
             
@@ -75,7 +73,7 @@ Get the first element of a list.
 Get the last element of a list.
 ```c
 //example
-[1,2,3].toList.last = Box.Filled.value(3)
+[1,2,3].toList.last = Box.With(3)
 [].toList.last = Box.Empty
 ```
 """
@@ -176,6 +174,23 @@ Add an element at the back of this List.
         case(.Cons(c)):
             (List.Cons(c.next(.append(element))))
 
+"""
+Add an element at the front of this List.
+```c
+//example
+[1,2,3].toList.prepend(0) = [0,1,2,3].toList
+```
+"""
+{A Type}
+(this List.of(A)).prepend(element A)
+    | List.of(A)
+    = this.
+        case(.Nil):
+            (List.Cons($.value(element) next(List.Nil)))
+    
+        case(.Cons(c)):
+            (List.Cons($.value(element) next(List.Cons(c))))
+
 
 """
 Take all elements from this List that fulfils the given predicate.
@@ -215,6 +230,12 @@ Transform all elements in this List with the given function.
         case(.Cons(c)):
             (List.Cons($.value(f.apply(c.value)) next(c.next.select(f))))
 
+"""
+```c
+//example
+[1,2,3].toList.select(.*(2)) where(.>(2)) = [6].toList
+```
+"""
 {A Type} {B Type}
 (this List.of(A)).
     select(f Function.in(A) out(B))
@@ -224,7 +245,7 @@ Transform all elements in this List with the given function.
         case(.Nil):
             (List.Nil)
         case(.Cons(c)):
-            (g.apply(c).
+            (g.apply(c.value).
                 case(.True):
                     (List.Cons($.
                         value(f.apply(c.value)) 
@@ -248,7 +269,7 @@ To check if some element of this List fulfils the given predicate.
             (Boolean.False)
 
         case(.Cons(c)):
-            (predicate.apply(c).
+            (predicate.apply(c.value).
                 case(.True):
                     (Boolean.True)
 
@@ -271,7 +292,7 @@ To check if every element of this List fulfils the given predicate.
             (Boolean.True)
 
         case(.Cons(c)):
-            (predicate.apply(c).
+            (predicate.apply(c.value).
                 case(.True):
                     (c.next.every(predicate))
 
@@ -413,7 +434,7 @@ Return the leftmost element in this List that satisfies the given predicate.
         case(.Nil):
             (Box.Empty)
         case(.Cons(c)):
-            (p.apply(c).
+            (p.apply(c.value).
                 case(.True):
                     (Box.With(c.value))
                 case(.False):
@@ -423,7 +444,7 @@ Return the leftmost element in this List that satisfies the given predicate.
 Partition this List by a predicate.
 ```c
 //example
-[1,2,3,4].toList.partitionBy(.>(2)) = object.included([3,4].toList) excluded([1,2].toList)
+[1,2,3,4].toList.partitionBy(.>(2)) = $.included([3,4].toList) excluded([1,2].toList)
 ```
 """
 {A Type}
@@ -439,9 +460,13 @@ Partition this List by a predicate.
     = this.
         case(.Nil):
             (previousResult)
+
         case(.Cons(c)):
             (f.apply(c.value).
                 case(.True):
-                    (c.next._partitionBy(f) startingFilled(previousResult.included(.append(c))))
+                    (c.next._partitionBy(f) startingFilled(previousResult.included(.append(c.value))))
+
                 case(.False):
-                    (c.next._partitionBy(f) startingFilled(previousResult.excluded(.append(c)))))
+                    (c.next._partitionBy(f) startingFilled(previousResult.excluded(.append(c.value)))))
+
+

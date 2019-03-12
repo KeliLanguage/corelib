@@ -2,27 +2,48 @@ Boolean = tags.
     case(.True) 
     case(.False) 
 
+true = Boolean.True
+
+false = Boolean.False
+
+"""
+Logical OR.
+"""
 (this Boolean).or(that Boolean) = 
     this.
         case(.True):
-           (Boolean.True)
+           (true)
    
        case(.False):
            (that)
 
-
+"""
+Logical AND.
+"""
 (this Boolean).and(that Boolean) = 
     this.
         case(.True): 
             (that)
 
         case(.False): 
-            (Boolean.False)
+            (false)
 
+"""
+Logical NOT.
+"""
 (this Boolean).not = 
     this.
         case(.True): 
-            (Boolean.False)
+            (false)
 
         case(.False): 
-            (Boolean.True)
+            (true)
+
+"""
+Compares if two elements are equals.
+"""
+{A Type}
+(this A).equals(that A) = 
+    ffi.javascript("KELI$equal(k$this,k$that) ? k$true : k$false").as(Boolean)
+
+

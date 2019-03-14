@@ -5,10 +5,10 @@
 = module.import("../_src/Box.keli")
 
 = [1,2,3].toList.
-    case(.Nil):
+    if(.Nil) then
         (0)
 
-    case(.Cons(c)):
+    if(.Cons(c)) then
         (2)
 
 xs = [1,2,3].toList
@@ -96,7 +96,3 @@ emptyList = List.Nil
 
 // partition 
 = xs.partitionBy(.>(1)).shouldBe($.included([2,3].toList) excluded([1].toList))
-
-
-
-

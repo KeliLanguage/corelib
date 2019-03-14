@@ -1,13 +1,13 @@
-Result.ok(A Type) fail(B Type) = tags.
-    case(.Ok(A))
-    case(.Fail(B))
+Result.ok(A Type) fail(B Type) = choice
+    .Ok(A)
+    .Fail(B)
 
 {A Type} {B Type} {C Type}
 (this Result.ok(A) fail(B)).then(function Function.in(A) out(C))
     | Result.ok(C) fail(B)
     = this.
-        case(.Ok(o)):
+        if(.Ok(o)) then
             (Result.Ok(function.apply(o)))
     
-        case(.Fail(f)):
+        if(.Fail(f)) then
             (Result.Fail(f))

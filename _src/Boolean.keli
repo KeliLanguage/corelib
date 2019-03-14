@@ -1,6 +1,6 @@
-Boolean = tags.
-    case(.True) 
-    case(.False) 
+Boolean = choice
+    .True 
+    .False 
 
 true = Boolean.True
 
@@ -11,10 +11,10 @@ Logical OR.
 """
 (this Boolean).or(that Boolean) = 
     this.
-        case(.True):
+        if(.True) then
            (true)
    
-       case(.False):
+        if(.False) then
            (that)
 
 """
@@ -22,10 +22,10 @@ Logical AND.
 """
 (this Boolean).and(that Boolean) = 
     this.
-        case(.True): 
+        if(.True) then 
             (that)
 
-        case(.False): 
+        if(.False) then 
             (false)
 
 """
@@ -33,10 +33,10 @@ Logical NOT.
 """
 (this Boolean).not = 
     this.
-        case(.True): 
+        if(.True) then 
             (false)
 
-        case(.False): 
+        if(.False) then 
             (true)
 
 """

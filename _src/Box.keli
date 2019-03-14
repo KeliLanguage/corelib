@@ -1,3 +1,3 @@
-Box.of(A Type) = tags.
-    case(.With(A))
-    case(.Empty)
+Box.of(A Type) = choice
+    .With(A)
+    .Empty

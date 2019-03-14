@@ -4,8 +4,8 @@
 {A Type}
 (expected A).shouldBe(actual A) =
     expected.equals(actual).
-        case(.True):
+        if(.True) then
             ("OK")
     
-        case(.False):
+        if(.False) then
             ("FAILED: expected ".++(expected.toString).++(" but got ").++(actual.toString))

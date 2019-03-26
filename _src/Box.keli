@@ -1,3 +1,13 @@
 Box.of(A Type) = choice
     .With(A)
     .Empty
+
+{A Type} {B Type}
+(this Box.of(A)).then(f Function.in(A) out(B))
+    | Box.of(B)
+    = this.
+        if(.With(w)) then
+            (Box.With(f.apply(w)))
+    
+        if(.Empty) then
+            (Box.Empty)

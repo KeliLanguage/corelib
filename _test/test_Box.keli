@@ -1,0 +1,5 @@
+= module.import("../_src/Box.keli")
+= module.import("../_src/Assertion.keli")
+= module.import("../_src/Math.keli")
+
+= Box.With(4).then(.+(2)).shouldBe(Box.With(6))

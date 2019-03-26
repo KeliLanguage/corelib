@@ -2,7 +2,7 @@
 = module.import("./String.keli")
 
 {A Type}
-(expected A).shouldBe(actual A) =
+(actual A).shouldBe(expected A) =
     expected.equals(actual).
         if(.True) then
             ("OK")

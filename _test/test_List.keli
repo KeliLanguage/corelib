@@ -2,6 +2,7 @@
 = module.import("../_src/Boolean.keli")
 = module.import("../_src/Math.keli")
 = module.import("../_src/List.keli")
+= module.import("../_src/String.keli")
 = module.import("../_src/Box.keli")
 
 = [1,2,3].toList.
@@ -97,3 +98,11 @@ emptyList = List.Nil
 
 // partition 
 = xs.partitionBy(.>(1)).shouldBe($.included([2,3].toList) excluded([1].toList))
+
+// reduce
+= xs.reduceBy(x | x.acc.+(x.next)) startingWith(0).shouldBe(6)
+
+= ["a","b","c"].toList.reduceBy(.++) startingWith("").shouldBe("abc")
+
+(this $.acc(String) next(String)).++ =
+    this.acc.++(this.next)

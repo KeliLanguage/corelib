@@ -469,4 +469,18 @@ Partition this List by a predicate.
                 if(.False) then
                     (c.next._partitionBy(f) startingFilled(previousResult.excluded(.append(c.value)))))
 
-
+"""
+Reduce this List into a single value. 
+Starts from the most-left element.
+"""
+{A Type} {B Type}
+(this List.of(A)).
+    reduceBy(f Function.in($.acc(B) next(A)) out(B))
+    startingWith(value B) 
+    | B
+    = this.
+        if(.Nil) then
+            (value)
+    
+        if(.Cons(c)) then
+            (c.next.reduceBy(f) startingWith(f.apply($.acc(value) next(c.value))))

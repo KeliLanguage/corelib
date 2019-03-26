@@ -44,3 +44,22 @@ Replace every occurence of the `old` String with `new` String.
 
 (this String).toLowerCase =
     ffi.javascript("k$this.toLowerCase()").as(String)
+
+(this String).splitBy(that String) =
+    ffi.javascript("k$this.split(k$that)").as(Array.of(String))
+
+(this String).startsWith(that String) = 
+    ffi.javascript("k$this.startsWith(k$that) ? k$Boolean.k$true : k$Boolean.k$false").as(Boolean)
+
+(this String).endsWith(that String) = 
+    ffi.javascript("k$this.endsWith(k$that) ? k$Boolean.k$true : k$Boolean.k$false").as(Boolean)
+
+(this String).contains(that String) =
+    ffi.javascript("k$this.includes(k$that) ? k$Boolean.k$true : k$Boolean.k$false").as(Boolean)
+
+(this String).trim = 
+    ffi.javascript("k$this.trim()").as(String)
+
+(this String).fromIndex(start Int) toIndex(end Int) = 
+    ffi.javascript("k$this.substring(k$start, k$end + 1)").as(String)
+

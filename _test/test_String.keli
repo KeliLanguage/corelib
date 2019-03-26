@@ -1,5 +1,6 @@
 = module.import("../_src/Assertion.keli")
 = module.import("../_src/String.keli")
+= module.import("../_src/Boolean.keli")
 
 = "Hello".length.shouldBe(5)
 
@@ -8,3 +9,21 @@
 = "HELLO".toLowerCase.shouldBe("hello")
 
 = "hello".toUpperCase.shouldBe("HELLO")
+
+= "hello world".splitBy(" ").shouldBe(["hello", "world"])
+
+= "hello".startsWith("hel").shouldBe(true)
+
+= "hello".startsWith("bye").shouldBe(false)
+
+= "hello".endsWith("llo").shouldBe(true)
+
+= "hello".endsWith("yo").shouldBe(false)
+
+= "hello world".contains("wor").shouldBe(true)
+
+= "hello".contains("xx").shouldBe(false)
+
+= " walao ".trim.shouldBe("walao")
+
+= "Hello world".fromIndex(0) toIndex(4).shouldBe("Hello")

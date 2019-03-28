@@ -9,7 +9,9 @@ xs = [1,2,3].toList
 
 // at
 = xs.at(0).shouldBe(Box.With(1))
+= [].toList.shouldBe(List.Nil)
 = xs.at(10).shouldBe(Box.Empty)
+
 
 // head
 = xs.head.shouldBe(Box.With(1))

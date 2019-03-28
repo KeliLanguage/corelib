@@ -410,6 +410,9 @@ Take elements from index `a` until inlcuding index `b` from a List.
 (this Array.of(A)).toList 
     = ffi.javascript("""
     (() => {
+        if(k$this.length === 0) {
+            return k$List.Nil;
+        }
         const result = k$List.Cons({value:k$this[0],next:k$List.Nil});
         let value = result;
         for(let i=1;i<k$this.length;i++){

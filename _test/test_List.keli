@@ -75,6 +75,10 @@ xs = [1,2,3].toList
 = 0.to(10).shouldBe([0,1,2,3,4,5,6,7,8,9,10].toList)
 = 5.to(1).shouldBe([5,4,3,2,1].toList)
 
+// to-by
+= 0.to(10) by(2).shouldBe([0,2,4,6,8,10].toList)
+= 0.to(10) by(3).shouldBe([0,3,6,9].toList)
+
 // drop
 = xs.drop(2).shouldBe([3].toList)
 = List.Nil.drop(1).shouldBe(List.Nil)
@@ -99,3 +103,7 @@ xs = [1,2,3].toList
 
 (this $.acc(String) next(String)).++ =
     this.acc.++(this.next)
+
+
+// times
+= "hello".repeat(4).shouldBe(["hello","hello","hello","hello"].toList)

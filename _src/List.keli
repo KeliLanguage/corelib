@@ -342,18 +342,30 @@ Get a range of integers.
     | List.of(Int)
     = end.<(start).
         if(.True) then
-            (end._forwardTo(start).reverse)
+            (end._forwardTo(start) by(1).reverse)
         if(.False) then
-            (start._forwardTo(end))
+            (start._forwardTo(end) by(1))
 
-(start Int)._forwardTo(end Int)
+"""
+Get a range of integers with the specified stepping value.
+"""
+(start Int).to(end Int) by(step Int)
+    | List.of(Int)
+    = end.<(start).
+        if(.True) then
+            (end._forwardTo(start) by(step).reverse)
+    
+        if(.False) then
+            (start._forwardTo(end) by(step))
+
+(start Int)._forwardTo(end Int) by(step Int)
     | List.of(Int)
     = end.<(start).
         if(.True) then
             (List.Nil)
 
         if(.False) then
-            (List.Cons($.value(start) next(start.+(1)._forwardTo(end))))
+            (List.Cons($.value(start) next(start.+(step)._forwardTo(end) by(step))))
 
 
 """
@@ -487,3 +499,21 @@ Starts from the most-left element.
     
         if(.Cons(c)) then
             (c.next.reduceBy(f) startingWith(f.apply($.acc(value) next(c.value))))
+
+"""
+Repeat an element for specified number of times.
+"""
+{A Type}
+(this A).repeat(n Int)
+    | List.of(A)
+    = this._repeat(n) prevValue(List.Nil)   
+
+{A Type}
+(this A)._repeat(n Int) prevValue(xs List.of(A))
+    | List.of(A)
+    = n.<=(0).
+        if(.True) then
+            (xs)
+    
+        if(.False) then
+            (this._repeat(n.-(1)) prevValue(List.Cons($.value(this) next(xs))))

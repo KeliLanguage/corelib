@@ -218,17 +218,17 @@ Take all elements from this List that fulfils the given predicate.
 Transform all elements in this List with the given function.
 ```c
 //example
-[1,2,3,4].toList.select(.*(2)) = [2,4,6,8].toList
+[1,2,3,4].toList.each(.*(2)) = [2,4,6,8].toList
 ```
 """
 {A Type} {B Type}
-(this List.of(A)).select(f Function.in(A) out(B))
+(this List.of(A)).each(f Function.in(A) out(B))
     | List.of(B)
     = this.
         if(.Nil) then
             (List.Nil)
         if(.Cons(c)) then
-            (List.Cons($.value(f.apply(c.value)) next(c.next.select(f))))
+            (List.Cons($.value(f.apply(c.value)) next(c.next.each(f))))
 
 """
 ```c

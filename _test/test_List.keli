@@ -50,8 +50,8 @@ xs = [1,2,3].toList
 = List.Nil.where(.equals(2)).shouldBe(List.Nil)
 
 // select
-= xs.select(.*(2)).shouldBe([2,4,6].toList)
-= List.Nil.select(.*(2)).shouldBe(List.Nil)
+= xs.each(.*(2)).shouldBe([2,4,6].toList)
+= List.Nil.each(.*(2)).shouldBe(List.Nil)
 
 // select where
 = xs.select(.*(2)) where(.>(2)).shouldBe([6].toList)

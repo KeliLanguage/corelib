@@ -1,0 +1,45 @@
+= module.import("../_src/Math.keli")
+= module.import("../_src/String.keli")
+= module.import("../_src/Browser.keli")
+
+MyModel = $.count(Int)
+
+MyMessage = choice
+    .Increment
+    .Decrement
+
+(this $.model(MyModel) message(MyMessage)).update = 
+    this.message.
+        if(.Increment) then
+            (this.model.count(.+(1)))
+    
+        if(.Decrement) then
+            (this.model.count(.-(1)))
+
+    
+
+(this MyModel).view 
+    | View.of(MyMessage) 
+    = View.Div($.props([]) children([
+        View.Text("My counter"),
+        View.Button($.
+            props([]) 
+            events([Event.OnClick(MyMessage.Increment)]) 
+            children([View.Text("Increment")])),
+
+        View.Button($.
+            props([]) 
+            events([Event.OnClick(MyMessage.Decrement)]) 
+            children([View.Text("Decrement")])),
+
+        View.Text(this.count.toString)
+    ]))
+
+
+
+
+= WebApp.New($.
+    rootNodeId("root") 
+    model(MyModel.count(0)) 
+    view(.view) 
+    updater(.update)).mount

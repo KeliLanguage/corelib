@@ -1,0 +1,69 @@
+= module.import("./Math.keli")
+= module.import("./String.keli")
+
+
+Props.of(Message Type) = choice 
+    .Id(String)
+
+Event.of(Message Type) = choice
+    .OnClick(Message)
+
+View.of(Message Type) = choice 
+    .Text(String)
+    .Div   ($.props(Array.of(Props.of(Message))) children(Array.of(View.of(Message))))
+    .Button($.props(Array.of(Props.of(Message))) events(Array.of(Event.of(Message))) children(Array.of(View.of(Message))))
+
+WebApp.
+    model(Model Type) 
+    message(Message Type) 
+        = choice.New($. 
+            rootNodeId(String)
+            model(Model)
+            view(Function.in(Model) out(View.of(Message)))
+            updater(Function.in($.model(Model) message(Message)) out(Model)))
+
+{Model Type} {Message Type} 
+(this WebApp.model(Model) message(Message)).mount = ffi.javascript(
+    """(()=>{
+
+    const render = (vNode, model, remount, updater) => {
+        if(vNode.__tag === 'Text') {
+            return document.createTextNode(vNode.__carry);
+        } else {
+            const element = document.createElement(vNode.__tag.toLowerCase())
+            // add all attributs as specified in vNode.__carry.props
+            for (const [k, v] of Object.entries(vNode.__carry.props)) {
+                element.setAttribute(k, v);
+            }
+
+            // add event hooks
+            if(vNode.__carry.events) {
+                for(const e of vNode.__carry.events) {
+                    // need to remove the 'on' prefix, refer https://www.w3schools.com/jsref/met_element_addeventlistener.asp
+                    element.addEventListener(e.__tag.toLowerCase().slice(2), () => {
+                        const updatedModel = updater({model, message: e.__carry});
+                        remount(updatedModel);
+                    });
+                }
+            }            
+
+            // append all children as specified in vNode.children
+            //   e.g. <div id="app"><img></div>
+            for (const child of vNode.__carry.children) {
+                element.appendChild(render(child, model, remount, updater));
+            }
+            return element;
+        }
+    }
+
+    function mount(rootNodeId, view, model, updater) {
+        const remount = (newModel) => {
+            mount(rootNodeId, view, newModel, updater);
+        };
+        const ui = render(view(model), model, remount, updater);
+        ui.setAttribute('id', rootNodeId)
+        document.getElementById(rootNodeId).replaceWith(ui);
+    }
+    const {rootNodeId, view, model, updater} = k$this.__carry;
+    mount(rootNodeId, view, model, updater);
+    })()""").as(String)

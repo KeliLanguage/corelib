@@ -17,10 +17,10 @@ List.of(A Type) = choice
 (this List.of(A))._toString
     | String
     = this.
-        if(.Nil) then
+        if(.Nil):
             ("")
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (c.value.toString.++(",").++(c.next._toString))
 
 """
@@ -40,15 +40,15 @@ Get the n-th element of a list.
     | Box.of(A)
     =
     this.
-        if(.Nil) then
+        if(.Nil):
             (Box.Empty)
     
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (ci.equals(index).
-                if(.True) then
+                if(.True):
                     (Box.With(c.value))
             
-                if(.False) then
+                if(.False):
                     (c.next._at(index) currentIndex(ci.+(1))))
 
 
@@ -64,9 +64,9 @@ Get the first element of a list.
 (this List.of(A)).head
     | Box.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (Box.Empty)
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (Box.With(c.value))
 
 """
@@ -81,11 +81,11 @@ Get the last element of a list.
 (this List.of(A)).last
     | Box.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (Box.Empty)
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (c.next.
-                if(.Nil) then
+                if(.Nil):
                     (Box.With(c.value))
                 else
                     (c.next.last))
@@ -102,9 +102,9 @@ Get all elements of this List, except the first element.
 (this List.of(A)).tail
     | List.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (List.Nil)
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (c.next)
 
 """
@@ -132,10 +132,10 @@ Get the number of elements in this List.
 (this List.of(A)).length 
     | Int 
     = this.
-        if(.Nil) then
+        if(.Nil):
             (0)
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (1.+(c.next.length))
 
 """
@@ -151,7 +151,7 @@ This should be used instead of using `myList.length.==(0)`, as this function is 
 (this List.of(A)).isEmpty
     | Boolean
     = this.
-        if(.Nil) then
+        if(.Nil):
             (Boolean.True)
 
         else
@@ -168,10 +168,10 @@ Add an element at the back of this List.
 (this List.of(A)).append(element A) 
     | List.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (List.Cons($.value(element) next(List.Nil)))
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (List.Cons(c.next(.append(element))))
 
 """
@@ -185,10 +185,10 @@ Add an element at the front of this List.
 (this List.of(A)).prepend(element A)
     | List.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (List.Cons($.value(element) next(List.Nil)))
     
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (List.Cons($.value(element) next(List.Cons(c))))
 
 
@@ -203,15 +203,15 @@ Take all elements from this List that fulfils the given predicate.
 (this List.of(A)).where(f Function.in(A) out(Boolean))
     | List.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (List.Nil)
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (f.apply(c.value).
-                if(.True) then
+                if(.True):
                     (List.Cons(c.next(.where(f))))
 
-                if(.False) then
+                if(.False):
                     (c.next.where(f)))
 
 """
@@ -225,9 +225,9 @@ Transform all elements in this List with the given function.
 (this List.of(A)).each(f Function.in(A) out(B))
     | List.of(B)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (List.Nil)
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (List.Cons($.value(f.apply(c.value)) next(c.next.each(f))))
 
 """
@@ -242,15 +242,15 @@ Transform all elements in this List with the given function.
     where(g Function.in(A) out(Boolean))
     | List.of(B)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (List.Nil)
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (g.apply(c.value).
-                if(.True) then
+                if(.True):
                     (List.Cons($.
                         value(f.apply(c.value)) 
                         next(c.next.select(f) where(g))))
-                if(.False) then
+                if(.False):
                     (c.next.select(f) where(g)))
 
 """
@@ -265,15 +265,15 @@ To check if some element of this List fulfils the given predicate.
 (this List.of(A)).some(predicate Function.in(A) out(Boolean))
     | Boolean
     = this.
-        if(.Nil) then
+        if(.Nil):
             (Boolean.False)
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (predicate.apply(c.value).
-                if(.True) then
+                if(.True):
                     (Boolean.True)
 
-                if(.False) then
+                if(.False):
                     (c.next.some(predicate)))
 
 """
@@ -288,15 +288,15 @@ To check if every element of this List fulfils the given predicate.
 (this List.of(A)).every(predicate Function.in(A) out(Boolean))
     | Boolean
     = this.
-        if(.Nil) then
+        if(.Nil):
             (Boolean.True)
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (predicate.apply(c.value).
-                if(.True) then
+                if(.True):
                     (c.next.every(predicate))
 
-                if(.False) then
+                if(.False):
                     (Boolean.False))
 
 
@@ -311,10 +311,10 @@ Concat two Lists together.
 (this List.of(A)).concat(that List.of(A))
     | List.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (that)
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (List.Cons(c.next(.concat(that))))
 
 """
@@ -329,9 +329,9 @@ Reverse this List.
 (this List.of(A)).reverse 
     | List.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (List.Nil)
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (c.next.reverse.concat(List.Cons($.value(c.value) next(List.Nil))))
 
 
@@ -341,9 +341,9 @@ Get a range of integers.
 (start Int).to(end Int) 
     | List.of(Int)
     = end.<(start).
-        if(.True) then
+        if(.True):
             (end._forwardTo(start) by(1).reverse)
-        if(.False) then
+        if(.False):
             (start._forwardTo(end) by(1))
 
 """
@@ -352,19 +352,19 @@ Get a range of integers with the specified stepping value.
 (start Int).to(end Int) by(step Int)
     | List.of(Int)
     = end.<(start).
-        if(.True) then
+        if(.True):
             (end._forwardTo(start) by(step).reverse)
     
-        if(.False) then
+        if(.False):
             (start._forwardTo(end) by(step))
 
 (start Int)._forwardTo(end Int) by(step Int)
     | List.of(Int)
     = end.<(start).
-        if(.True) then
+        if(.True):
             (List.Nil)
 
-        if(.False) then
+        if(.False):
             (List.Cons($.value(start) next(start.+(step)._forwardTo(end) by(step))))
 
 
@@ -379,15 +379,15 @@ Drop the specified number of elements from the front of this List.
 (this List.of(A)).drop(x Int)
     | List.of(A)
     = x.<(1).
-        if(.True) then
+        if(.True):
             (this)
 
-        if(.False) then
+        if(.False):
             (this.
-                if(.Nil) then
+                if(.Nil):
                     (List.Nil)
 
-                if(.Cons(c)) then
+                if(.Cons(c)):
                     (c.next.drop(x.-(1))))
 
 
@@ -446,13 +446,13 @@ Return the leftmost element in this List that satisfies the given predicate.
 (this List.of(A)).find(p Function.in(A) out(Boolean))
     | Box.of(A)
     = this.
-        if(.Nil) then
+        if(.Nil):
             (Box.Empty)
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (p.apply(c.value).
-                if(.True) then
+                if(.True):
                     (Box.With(c.value))
-                if(.False) then
+                if(.False):
                     (c.next.find(p)))
 
 """
@@ -473,15 +473,15 @@ Partition this List by a predicate.
     startingFilled(previousResult $.included(List.of(A)) excluded(List.of(A)))
     | $.included(List.of(A)) excluded(List.of(A))
     = this.
-        if(.Nil) then
+        if(.Nil):
             (previousResult)
 
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (f.apply(c.value).
-                if(.True) then
+                if(.True):
                     (c.next._partitionBy(f) startingFilled(previousResult.included(.append(c.value))))
 
-                if(.False) then
+                if(.False):
                     (c.next._partitionBy(f) startingFilled(previousResult.excluded(.append(c.value)))))
 
 """
@@ -494,10 +494,10 @@ Starts from the most-left element.
     startingWith(value B) 
     | B
     = this.
-        if(.Nil) then
+        if(.Nil):
             (value)
     
-        if(.Cons(c)) then
+        if(.Cons(c)):
             (c.next.reduceBy(f) startingWith(f.apply($.acc(value) next(c.value))))
 
 """
@@ -512,8 +512,23 @@ Repeat an element for specified number of times.
 (this A)._repeat(n Int) prevValue(xs List.of(A))
     | List.of(A)
     = n.<=(0).
-        if(.True) then
+        if(.True):
             (xs)
     
-        if(.False) then
+        if(.False):
             (this._repeat(n.-(1)) prevValue(List.Cons($.value(this) next(xs))))
+
+{A Type}
+(this List.of(A)).toArray
+    | Array.of(A)
+    = ffi.javascript("""
+    (()=>{
+        const result = [];
+        let current = k$this;
+        while(current.__tag == 'Cons') {
+            result.push(current.__carry.value);
+            current = current.__carry.next;
+        }
+        return result;
+    })()
+    """).as(Array.of(A))

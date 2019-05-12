@@ -11,21 +11,21 @@ Logical OR.
 """
 (this Boolean).or(that Boolean) = 
     this.
-        if(.True) then
-           (true)
+        if(.True):
+           (Boolean.False)
    
-        if(.False) then
-           (that)
+        if(.False):
+           (Boolean.True)
 
 """
 Logical AND.
 """
 (this Boolean).and(that Boolean) = 
     this.
-        if(.True) then 
+        if(.True):
             (that)
 
-        if(.False) then 
+        if(.False):
             (false)
 
 """
@@ -33,10 +33,10 @@ Logical NOT.
 """
 (this Boolean).not = 
     this.
-        if(.True) then 
+        if(.True):
             (false)
 
-        if(.False) then 
+        if(.False):
             (true)
 
 """
